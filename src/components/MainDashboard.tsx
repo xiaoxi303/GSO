@@ -14,11 +14,11 @@ import { Globe, RefreshCw, Radio, ShieldCheck, WifiOff } from 'lucide-react';
 
 const fetcher = async <T,>(url: string): Promise<T> => {
   const response = await fetch(url);
-  const data = await response.json();
+  const data = (await response.json()) as { error?: string };
   if (!response.ok) {
     throw new Error(data?.error ?? `Request failed: ${response.status}`);
   }
-  return data as T;
+  return data as unknown as T;
 };
 
 export default function MainDashboard() {
