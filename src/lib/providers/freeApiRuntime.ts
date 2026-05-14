@@ -26,9 +26,11 @@ interface CachedValue<T> {
   state: CacheState;
 }
 
+type CacheScope = 'market' | 'news';
+
 interface CachedFetchOptions<T> {
   env: RuntimeEnv;
-  namespace: 'MARKET_CACHE' | 'NEWS_CACHE';
+  namespace: CacheScope;
   key: string;
   ttlSeconds: number;
   staleSeconds: number;
@@ -118,7 +120,7 @@ export async function enforceRateLimit(
   const bucket = Math.floor(now / (windowSeconds * 1000));
   const key = `rate:${sourceId}:${bucket}`;
   const resetAt = (bucket + 1) * windowSeconds * 1000;
-  const kv = getKV(env, 'MARKET_CACHE') ?? getKV(env, 'NEWS_CACHE');
+  const kv = getKV(env);
 
   if (kv) {
     try {
@@ -233,21 +235,30 @@ export async function fetchJson<T>(
   return data as T;
 }
 
-function getKV(env: RuntimeEnv, name: 'MARKET_CACHE' | 'NEWS_CACHE'): KVNamespaceLike | undefined {
-  const candidate = env[name];
-  if (
-    isRecord(candidate)
-    && typeof candidate.get === 'function'
-    && typeof candidate.put === 'function'
-  ) {
-    return candidate as unknown as KVNamespaceLike;
+function getKV(env: RuntimeEnv, scope?: CacheScope): KVNamespaceLike | undefined {
+  const names = scope === 'market'
+    ? ['CACHE', 'MARKET_CACHE']
+    : scope === 'news'
+      ? ['CACHE', 'NEWS_CACHE']
+      : ['CACHE', 'MARKET_CACHE', 'NEWS_CACHE'];
+
+  for (const name of names) {
+    const candidate = env[name];
+    if (
+      isRecord(candidate)
+      && typeof candidate.get === 'function'
+      && typeof candidate.put === 'function'
+    ) {
+      return candidate as unknown as KVNamespaceLike;
+    }
   }
+
   return undefined;
 }
 
 async function readCache<T>(
   env: RuntimeEnv,
-  namespace: 'MARKET_CACHE' | 'NEWS_CACHE',
+  namespace: CacheScope,
   key: string,
 ): Promise<{ envelope: CacheEnvelope<T>; provider: 'kv' | 'memory' } | undefined> {
   const memory = memoryCache.get(key) as CacheEnvelope<T> | undefined;
@@ -269,7 +280,7 @@ async function readCache<T>(
 
 async function writeCache<T>(
   env: RuntimeEnv,
-  namespace: 'MARKET_CACHE' | 'NEWS_CACHE',
+  namespace: CacheScope,
   key: string,
   envelope: CacheEnvelope<T>,
   expirationTtl: number,

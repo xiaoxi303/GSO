@@ -56,21 +56,16 @@ The dashboard displays source, update time, realtime/delayed flags, cache/stale 
 
 ## Cloudflare Runtime
 
-The `wrangler.toml` keeps the runtime lightweight and declares only the KV cache bindings that the app already knows how to use:
+The app uses one optional KV binding for cache data:
 
-- `MARKET_CACHE` for quote, macro, rate-limit, and stale cache entries
-- `NEWS_CACHE` for news metadata and SEC filing cache
+- Binding variable name: `CACHE`
+- KV namespace: any KV namespace you create or select in the Cloudflare dashboard
 
-You can bind them from the Cloudflare dashboard:
-
-1. Open Workers & Pages -> your Worker -> Bindings.
-2. Click Add binding -> KV namespace.
-3. Set the binding name to `MARKET_CACHE` and select or create a namespace.
-4. Repeat with binding name `NEWS_CACHE`.
+From the Cloudflare dashboard, open Workers & Pages -> your Worker -> Bindings, click Add binding -> KV namespace, set the variable name to `CACHE`, select a KV namespace, then save.
 
 API keys are not KV data. Add them as Worker secrets/environment variables, and keep the exact names listed in the Cloudflare Secrets section.
 
-When KV bindings are absent, the app falls back to in-memory cache for local preview, but production should use the KV bindings above.
+When the `CACHE` binding is absent, the app falls back to in-memory cache for local preview, but production should use the KV binding above.
 
 Run Cloudflare preview:
 

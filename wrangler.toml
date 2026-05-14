@@ -11,7 +11,4 @@ DEFAULT_LOCALE = "zh-CN"
 SEC_PROJECT_NAME = "GlobalMarketIntelligence"
 
 [[kv_namespaces]]
-binding = "MARKET_CACHE"
-
-[[kv_namespaces]]
-binding = "NEWS_CACHE"
+binding = "CACHE"

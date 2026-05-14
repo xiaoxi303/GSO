@@ -380,7 +380,7 @@ export class RealDataProvider implements MarketDataProvider, NewsProvider {
     const env = await getRuntimeEnv();
     const cached = await cachedFetch<NewsItem[]>({
       env,
-      namespace: 'NEWS_CACHE',
+      namespace: 'news',
       key: 'news:latest:v2',
       ttlSeconds: 300,
       staleSeconds: 1800,
@@ -549,7 +549,7 @@ export class RealDataProvider implements MarketDataProvider, NewsProvider {
     }
     const cached = await cachedFetch<SecFilingItem[]>({
       env,
-      namespace: 'NEWS_CACHE',
+      namespace: 'news',
       key: `sec:filings:${normalizedCik}`,
       ttlSeconds: 3600,
       staleSeconds: 86400,
@@ -580,7 +580,7 @@ export class RealDataProvider implements MarketDataProvider, NewsProvider {
   private async fetchQuoteWithCache(env: RuntimeEnv, sourceId: QuoteSourceId, asset: AssetConfig): Promise<QuoteData> {
     const cached = await cachedFetch<QuoteData>({
       env,
-      namespace: 'MARKET_CACHE',
+      namespace: 'market',
       key: `quote:${sourceId}:${asset.symbol}`,
       ttlSeconds: 60,
       staleSeconds: 900,
@@ -671,7 +671,7 @@ export class RealDataProvider implements MarketDataProvider, NewsProvider {
     const cacheKey = assets.map((asset) => asset.symbol).sort().join(',');
     const cached = await cachedFetch<QuoteData[]>({
       env,
-      namespace: 'MARKET_CACHE',
+      namespace: 'market',
       key: `quote:twelveData:batch:${cacheKey}`,
       ttlSeconds: 60,
       staleSeconds: 900,
@@ -707,7 +707,7 @@ export class RealDataProvider implements MarketDataProvider, NewsProvider {
   private async fetchFredSeries(env: RuntimeEnv, seriesId: string, symbol: string, name: string): Promise<QuoteData> {
     const cached = await cachedFetch<QuoteData>({
       env,
-      namespace: 'MARKET_CACHE',
+      namespace: 'market',
       key: `fred:${seriesId}`,
       ttlSeconds: 3600,
       staleSeconds: 86400,
@@ -748,7 +748,7 @@ export class RealDataProvider implements MarketDataProvider, NewsProvider {
   private async getCoinGeckoQuotes(env: RuntimeEnv): Promise<QuoteData[]> {
     const cached = await cachedFetch<QuoteData[]>({
       env,
-      namespace: 'MARKET_CACHE',
+      namespace: 'market',
       key: 'coingecko:simple:btc-eth',
       ttlSeconds: 60,
       staleSeconds: 600,
