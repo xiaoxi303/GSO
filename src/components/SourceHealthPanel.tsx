@@ -17,12 +17,12 @@ export function SourceHealthPanel({ sources }: { sources: DataSourceStatus[] }) 
   return (
     <Card className="h-full">
       <div className="flex items-start justify-between gap-3 border-b border-gray-800/50 pb-2">
-        <SectionTitle title="API Health" subtitle="免费源配置、限额、延迟与缓存状态" />
+        <SectionTitle title="API 数据源状态监控" subtitle="接口密钥配置、限额、延迟与响应诊断" />
         <div className="flex flex-wrap justify-end gap-1.5">
-          <Badge variant="bullish">{counts.healthy} OK</Badge>
-          <Badge variant="warn">{counts.degraded} DEGRADED</Badge>
-          <Badge variant="neutral">{counts.missing} MISSING</Badge>
-          {counts.limited > 0 && <Badge variant="extreme">{counts.limited} LIMITED</Badge>}
+          <Badge variant="bullish">{counts.healthy} 正常</Badge>
+          <Badge variant="warn">{counts.degraded} 降级</Badge>
+          <Badge variant="neutral">{counts.missing} 缺密钥</Badge>
+          {counts.limited > 0 && <Badge variant="extreme">{counts.limited} 受限</Badge>}
         </div>
       </div>
 
@@ -35,7 +35,7 @@ export function SourceHealthPanel({ sources }: { sources: DataSourceStatus[] }) 
                   {iconForStatus(source.status)}
                   <span className="text-xs font-bold text-gray-200 truncate">{source.name}</span>
                 </div>
-                <div className="mt-1 text-[10px] uppercase tracking-wide text-gray-500">{source.category} · priority {source.priority}</div>
+                <div className="mt-1 text-[10px] uppercase tracking-wide text-gray-500">类别: {translateCategory(source.category)} · 优先级: {source.priority}</div>
               </div>
               <Badge variant={variantForStatus(source.status)} className="text-[9px]">
                 {labelForStatus(source.status)}
@@ -46,14 +46,14 @@ export function SourceHealthPanel({ sources }: { sources: DataSourceStatus[] }) 
 
             <div className="flex flex-wrap gap-1.5 text-[10px] text-gray-500 font-mono">
               <span className="rounded border border-slate-800 px-1.5 py-0.5">
-                {source.isRealtime ? 'realtime' : 'not realtime'}
+                {source.isRealtime ? '支持实时' : '不支持实时'}
               </span>
               <span className="rounded border border-slate-800 px-1.5 py-0.5">
-                {source.isDelayed ? `delay ${formatDelay(source.delaySeconds)}` : 'no delay flag'}
+                {source.isDelayed ? `延迟 ${formatDelay(source.delaySeconds)}` : '无延迟标记'}
               </span>
               {source.lastUpdated && (
                 <span className="rounded border border-slate-800 px-1.5 py-0.5">
-                  updated {new Date(source.lastUpdated).toLocaleTimeString()}
+                  最近查询: {new Date(source.lastUpdated).toLocaleTimeString()}
                 </span>
               )}
             </div>
@@ -62,6 +62,17 @@ export function SourceHealthPanel({ sources }: { sources: DataSourceStatus[] }) 
       </div>
     </Card>
   );
+}
+
+function translateCategory(cat: string) {
+  const map: Record<string, string> = {
+    market: '核心行情',
+    macro: '宏观数据',
+    news: '财经资讯',
+    crypto: '加密货币',
+    china: '中国A股',
+  };
+  return map[cat.toLowerCase()] || cat;
 }
 
 function iconForStatus(status: DataSourceStatus['status']) {
@@ -80,14 +91,18 @@ function variantForStatus(status: DataSourceStatus['status']) {
 }
 
 function labelForStatus(status: DataSourceStatus['status']) {
-  if (status === 'missing_key') return 'API key missing';
-  if (status === 'limit_reached') return 'API limit reached';
-  return status.replace('_', ' ');
+  if (status === 'missing_key') return 'API 密钥缺失';
+  if (status === 'limit_reached') return 'API 限频达到上限';
+  if (status === 'healthy') return '运行正常';
+  if (status === 'degraded') return '降级服务';
+  if (status === 'not_supported') return '不支持当前环境';
+  if (status === 'offline') return '接口离线';
+  return '未知状态';
 }
 
 function formatDelay(seconds: number) {
-  if (seconds >= 86400) return 'daily';
-  if (seconds >= 3600) return `${Math.round(seconds / 3600)}h`;
-  if (seconds >= 60) return `${Math.round(seconds / 60)}m`;
-  return `${seconds}s`;
+  if (seconds >= 86400) return '按日更新';
+  if (seconds >= 3600) return `约 ${Math.round(seconds / 3600)} 小时`;
+  if (seconds >= 60) return `约 ${Math.round(seconds / 60)} 分钟`;
+  return `${seconds} 秒`;
 }

@@ -228,6 +228,7 @@ const MARKET_ASSETS: AssetConfig[] = [
   { symbol: 'DIA', name: 'Dow Jones ETF', market: 'US', assetType: 'etf', notice: 'Used as a Dow proxy.' },
   { symbol: 'IWM', name: 'Russell 2000 ETF', market: 'US', assetType: 'etf' },
   { symbol: 'FXI', name: 'China Large-Cap ETF', market: 'CN', assetType: 'etf', notice: 'Cloudflare-safe China market proxy.' },
+  { symbol: 'ASHR', name: 'China A-Share ETF', market: 'CN', assetType: 'etf', notice: 'CSI 300 ETF proxy for A-Shares.' },
   { symbol: 'EWH', name: 'Hong Kong ETF', market: 'HK', assetType: 'etf', notice: 'Used as a Hong Kong market proxy.' },
   { symbol: 'EWJ', name: 'Japan ETF', market: 'AS', assetType: 'etf' },
   { symbol: 'FEZ', name: 'Euro Stoxx 50 ETF', market: 'EU', assetType: 'etf' },
@@ -490,20 +491,20 @@ export class RealDataProvider implements MarketDataProvider, NewsProvider {
     const strongSectors = [...sectors].sort((a, b) => b.changePercent - a.changePercent).slice(0, 4);
     const weakSectors = [...sectors].sort((a, b) => a.changePercent - b.changePercent).slice(0, 4);
     const positiveCount = indexes.filter((item) => item.changePercent > 0).length;
-    const sentiment = positiveCount > indexes.length / 2 ? 'Risk On' : positiveCount === 0 ? 'Risk Off' : 'Neutral';
+    const sentiment = positiveCount > indexes.length / 2 ? '风险偏好 (Risk On)' : positiveCount === 0 ? '避险情绪 (Risk Off)' : '中性平衡 (Neutral)';
 
     return {
-      sentiment: `${sentiment} - rule-based summary from configured free sources`,
+      sentiment: `${sentiment} - 基于已配置免费数据源的规则判定总结`,
       topConclusions: [
         leaders.length
-          ? `Leading proxies: ${leaders.map((item) => `${item.name} ${this.formatPercent(item.changePercent)}`).join(', ')}.`
-          : 'No verified market quote data is available yet.',
+          ? `表现领先的标的：${leaders.map((item) => `${item.name} ${this.formatPercent(item.changePercent)}`).join(', ')}。`
+          : '暂无可用的市场报价数据。',
         laggards.length
-          ? `Weakest proxies: ${laggards.map((item) => `${item.name} ${this.formatPercent(item.changePercent)}`).join(', ')}.`
-          : 'No negative market proxy has been detected.',
+          ? `表现最弱的标的：${laggards.map((item) => `${item.name} ${this.formatPercent(item.changePercent)}`).join(', ')}。`
+          : '未监测到市场下跌指标。',
         news.length
-          ? `Latest news metadata is aggregated from ${Array.from(new Set(news.map((item) => item.source))).slice(0, 5).join(', ')}.`
-          : 'No news metadata is available from configured free sources.',
+          ? `最新资讯聚合自以下来源：${Array.from(new Set(news.map((item) => item.source))).slice(0, 5).join(', ')}。`
+          : '配置的免费资讯源暂无可用动态。',
       ],
       bullishDrivers: leaders.map((item) => `${item.name} ${this.formatPercent(item.changePercent)}`),
       bearishDrivers: laggards.map((item) => `${item.name} ${this.formatPercent(item.changePercent)}`),
@@ -512,7 +513,7 @@ export class RealDataProvider implements MarketDataProvider, NewsProvider {
       shortTermStrong: strongSectors.map((item) => item.sector),
       mediumTermFocus: leaders.map((item) => item.symbol),
       risksToAvoid: weakSectors.map((item) => item.sector),
-      tomorrowOutlook: 'This summary uses only server-side free data sources and cached metadata. Configure paid or higher-quota feeds before treating any item as realtime.',
+      tomorrowOutlook: '此自动摘要基于服务端免费源数据与缓存生成。在将任何信息视作实时信号之前，请配置更高配额或付费实时数据源。',
       timestamp,
     };
   }

@@ -18,13 +18,13 @@ export function SectorHeatmap({ data }: { data: SectorFundFlow[] }) {
   return (
     <Card className="h-full">
       <div className="flex justify-between items-start gap-3 mb-2 border-b border-gray-800/50 pb-2">
-        <SectionTitle title="Sector Proxy Heatmap" subtitle="板块 ETF 价格代理；不伪造主力资金流" />
-        <Badge variant="warn" className="text-[9px]">proxy data</Badge>
+        <SectionTitle title="行业板块热力代理" subtitle="由板块代表性 ETF 价格代理；不伪造主力资金流" />
+        <Badge variant="warn" className="text-[9px]">ETF 代理数据</Badge>
       </div>
 
       <div className="flex flex-col xl:flex-row gap-6 mt-1">
-        {renderGrid(cnData, 'China / Hong Kong proxies')}
-        {renderGrid(usData, 'US sector ETFs')}
+        {renderGrid(cnData, '中国/香港 主要板块代理')}
+        {renderGrid(usData, '美股核心行业 ETF')}
       </div>
     </Card>
   );
@@ -57,9 +57,9 @@ function renderGrid(items: SectorFundFlow[], title: string) {
               <span className="text-xs tracking-wide font-medium leading-tight truncate max-w-full px-1">{item.sector}</span>
               <span className="text-sm font-bold font-mono mt-0.5">{pct > 0 ? '+' : ''}{pct.toFixed(2)}%</span>
               <span className="text-[9px] opacity-70 font-mono mt-1 whitespace-nowrap max-w-full truncate">
-                {item.representativeStocks.join('/')} · {item.source ?? 'source pending'}
+                {item.representativeStocks.join('/')} · {item.source ?? '等待加载'}
               </span>
-              {item.isStale && <span className="text-[9px] mt-1 text-amber-300">stale cache</span>}
+              {item.isStale && <span className="text-[9px] mt-1 text-amber-300">过期缓存</span>}
             </div>
           );
         })}

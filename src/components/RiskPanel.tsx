@@ -23,8 +23,8 @@ export function RiskPanel({ data }: { data: RiskSignal[] }) {
       </div>
 
       <div className="flex justify-between items-start gap-3 mb-3 border-b border-red-950/50 pb-2 z-10">
-        <SectionTitle title="Risk Signals" subtitle="由已返回的真实行情/宏观数据规则触发" />
-        <span className="text-[10px] font-bold text-red-400 font-mono uppercase">MONITORING</span>
+        <SectionTitle title="核心风险信号" subtitle="由已返回的真实行情/宏观数据规则触发" />
+        <span className="text-[10px] font-bold text-red-400 font-mono uppercase tracking-widest bg-red-500/10 px-1.5 py-0.5 rounded">持续监控中</span>
       </div>
 
       <div className="flex flex-col gap-3 mt-1 z-10">
@@ -46,7 +46,7 @@ export function RiskPanel({ data }: { data: RiskSignal[] }) {
                   <span className="text-xs font-extrabold text-red-400 uppercase tracking-wider truncate">{risk.riskType}</span>
                 </div>
                 <Badge variant={risk.riskLevel === 'medium' ? 'warn' : 'extreme'} className="text-[9px] font-mono">
-                  {risk.riskLevel.toUpperCase()}
+                  {translateRiskLevel(risk.riskLevel)}
                 </Badge>
               </div>
 
@@ -54,16 +54,16 @@ export function RiskPanel({ data }: { data: RiskSignal[] }) {
 
               <div className="flex flex-wrap gap-2 border-t border-red-950/30 pt-2 mt-1 text-[10px]">
                 <div className="flex gap-1 font-mono">
-                  <span className="text-red-500/80">markets:</span>
+                  <span className="text-red-500/80">波及市场:</span>
                   <span className="text-gray-400 font-bold">{risk.affectedMarkets.join(', ')}</span>
                 </div>
                 <div className="flex gap-1 font-mono">
-                  <span className="text-red-500/80">sectors:</span>
+                  <span className="text-red-500/80">波及板块:</span>
                   <span className="text-gray-400 font-bold">{risk.affectedSectors.join(', ')}</span>
                 </div>
                 {risk.safeHavens && (
                   <div className="ml-auto flex gap-1 font-mono bg-emerald-950/20 px-1 rounded border border-emerald-900/20">
-                    <span className="text-emerald-400">hedge:</span>
+                    <span className="text-emerald-400">对冲避险:</span>
                     <span className="text-emerald-300 font-bold">{risk.safeHavens.join(', ')}</span>
                   </div>
                 )}
@@ -74,4 +74,13 @@ export function RiskPanel({ data }: { data: RiskSignal[] }) {
       </div>
     </Card>
   );
+}
+
+function translateRiskLevel(level: string) {
+  const map: Record<string, string> = {
+    medium: '中风险',
+    high: '高风险',
+    extreme: '极端风险',
+  };
+  return map[level.toLowerCase()] || level.toUpperCase();
 }

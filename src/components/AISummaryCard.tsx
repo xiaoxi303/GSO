@@ -22,10 +22,10 @@ export function AISummaryCard({ data }: { data: MarketSummary }) {
             </div>
             <div className="min-w-0">
               <h2 className="text-sm font-bold text-white tracking-wider uppercase">
-                Rule Summary
+                智能规则分析 (AISummary)
               </h2>
               <p className="text-[10px] text-gray-500 font-mono">
-                服务端基于免费源元数据生成，不调用前端 API Key。
+                服务端基于免费源元数据生成，不依赖前端 API 密钥。
               </p>
             </div>
           </div>
@@ -38,7 +38,7 @@ export function AISummaryCard({ data }: { data: MarketSummary }) {
           <div className="flex flex-col gap-3">
             <div className="bg-purple-950/10 rounded-lg p-3 border border-purple-500/10">
               <div className="flex items-center gap-1 text-purple-300 text-xs font-bold mb-1.5">
-                <Sparkles size={14} /> Key conclusions
+                <Sparkles size={14} /> 核心研判总结
               </div>
               <ul className="space-y-2 text-xs text-gray-300">
                 {data.topConclusions.map((item, index) => (
@@ -52,7 +52,7 @@ export function AISummaryCard({ data }: { data: MarketSummary }) {
 
             <div className="bg-emerald-950/10 rounded-lg p-3 border border-emerald-500/10">
               <div className="flex items-center gap-1 text-emerald-400 text-xs font-bold mb-1.5">
-                <TrendingUp size={14} /> Strong proxies
+                <TrendingUp size={14} /> 强势上涨品种
               </div>
               <div className="flex flex-wrap gap-1.5">
                 {data.bullishDrivers.length > 0 ? data.bullishDrivers.map((item) => (
@@ -65,7 +65,7 @@ export function AISummaryCard({ data }: { data: MarketSummary }) {
           <div className="flex flex-col gap-3">
             <div className="bg-red-950/10 rounded-lg p-3 border border-red-500/10">
               <div className="flex items-center gap-1 text-red-400 text-xs font-bold mb-1.5">
-                <TrendingDown size={14} /> Weak proxies
+                <TrendingDown size={14} /> 弱势承压品种
               </div>
               <div className="flex flex-wrap gap-1.5">
                 {data.bearishDrivers.length > 0 ? data.bearishDrivers.map((item) => (
@@ -76,13 +76,13 @@ export function AISummaryCard({ data }: { data: MarketSummary }) {
 
             <div className="bg-blue-950/10 rounded-lg p-3 border border-blue-500/10">
               <div className="flex items-center gap-1 text-blue-400 text-xs font-bold mb-1.5">
-                <Lightbulb size={14} /> Outlook
+                <Lightbulb size={14} /> 前瞻风向提示
               </div>
               <p className="text-xs text-gray-300 leading-relaxed">{data.tomorrowOutlook}</p>
             </div>
 
             <div className="flex flex-wrap gap-1 mt-1">
-              <span className="text-[10px] font-bold text-gray-500 mr-1 uppercase self-center">Focus:</span>
+              <span className="text-[10px] font-bold text-gray-500 mr-1 uppercase self-center">核心关注焦点:</span>
               {data.mediumTermFocus.map(item => (
                 <Badge key={item} variant="neutral" className="text-[10px]">{item}</Badge>
               ))}

@@ -17,10 +17,10 @@ export function NewsFeed({ data }: { data: NewsItem[] }) {
   return (
     <Card className="h-full">
       <div className="flex justify-between items-start gap-3 mb-3 pb-2 border-b border-gray-800/50">
-        <SectionTitle title="News Metadata" subtitle="仅保存标题、摘要、原始链接、发布时间和来源" />
+        <SectionTitle title="全球财经资讯" subtitle="仅保存标题、摘要、原始链接、发布时间和来源" />
         <div className="flex gap-1 select-none">
           <Badge variant={data.some(item => item.isStale) ? 'warn' : 'info'} className="text-[9px]">
-            {data.some(item => item.isStale) ? 'STALE CACHE' : 'DEDUPED'}
+            {data.some(item => item.isStale) ? '缓存模式' : '最新过滤'}
           </Badge>
         </div>
       </div>
@@ -58,8 +58,8 @@ export function NewsFeed({ data }: { data: NewsItem[] }) {
                   </div>
 
                   <div className="flex gap-1 shrink-0">
-                    {news.isCached && <Badge variant="info" className="text-[9px]">cache</Badge>}
-                    {news.isStale && <Badge variant="warn" className="text-[9px]">stale</Badge>}
+                    {news.isCached && <Badge variant="info" className="text-[9px]">缓存</Badge>}
+                    {news.isStale && <Badge variant="warn" className="text-[9px]">过期</Badge>}
                   </div>
                 </div>
 
@@ -82,7 +82,7 @@ export function NewsFeed({ data }: { data: NewsItem[] }) {
                 <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 mt-1 border-t border-gray-800/50 pt-2 text-[11px]">
                   <span className="text-gray-500 flex items-center gap-1">
                     <Info className="w-3 h-3" />
-                    metadata only
+                    仅元数据
                   </span>
                   {news.relatedSectors.length > 0 && (
                     <div className="flex gap-1 flex-wrap">
@@ -93,7 +93,7 @@ export function NewsFeed({ data }: { data: NewsItem[] }) {
                   )}
                   {news.relatedSymbols.length > 0 && (
                     <div className="ml-auto flex items-center gap-1 bg-gray-900/50 px-1.5 py-0.5 rounded border border-gray-800">
-                      <span className="text-gray-500 font-mono">symbols:</span>
+                      <span className="text-gray-500 font-mono">相关标的:</span>
                       <span className="text-gray-300 font-bold font-mono text-[10px]">{news.relatedSymbols.join(', ')}</span>
                     </div>
                   )}

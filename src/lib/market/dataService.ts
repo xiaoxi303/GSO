@@ -52,6 +52,10 @@ export class DataService {
     return DataService.currentProvider.getLatestNews();
   }
 
+  static async getQuote(symbol: string) {
+    return DataService.currentProvider.getQuote(symbol);
+  }
+
   static async getSectorPerformance(market: string) {
     return DataService.currentProvider.getSectorPerformance(market);
   }
@@ -74,9 +78,9 @@ export class DataService {
 
   private static getMarketSession(): string {
     const hour = new Date().getUTCHours();
-    if (hour >= 1 && hour < 8) return 'Asia regular session';
-    if (hour >= 13 && hour < 21) return 'US / Europe active window';
-    return 'Pre-market / after-hours window';
+    if (hour >= 1 && hour < 8) return '亚洲常规交易时段';
+    if (hour >= 13 && hour < 21) return '欧美活跃交易时段';
+    return '盘前 / 盘后非交易时段';
   }
 
   private static getActiveSources(items: Array<{ source?: string }>): string[] {
