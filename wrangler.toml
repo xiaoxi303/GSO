@@ -12,3 +12,7 @@ SEC_PROJECT_NAME = "GlobalMarketIntelligence"
 
 [[kv_namespaces]]
 binding = "CACHE"
+
+[assets]
+directory = ".open-next/assets"
+binding = "ASSETS"
