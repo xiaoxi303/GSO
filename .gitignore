@@ -39,6 +39,7 @@ yarn-error.log*
 
 # cloudflare local state
 .wrangler
+.wrangler-dry-run
 .dev.vars
 
 # typescript

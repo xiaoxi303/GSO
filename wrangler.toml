@@ -2,9 +2,16 @@ name = "global-market-intelligence"
 main = ".open-next/worker.js"
 compatibility_date = "2026-05-14"
 compatibility_flags = ["nodejs_compat"]
+keep_vars = true
 
 [vars]
 APP_ENV = "production"
 DATA_MODE = "real"
 DEFAULT_LOCALE = "zh-CN"
 SEC_PROJECT_NAME = "GlobalMarketIntelligence"
+
+[[kv_namespaces]]
+binding = "MARKET_CACHE"
+
+[[kv_namespaces]]
+binding = "NEWS_CACHE"
