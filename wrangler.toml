@@ -8,34 +8,3 @@ APP_ENV = "production"
 DATA_MODE = "real"
 DEFAULT_LOCALE = "zh-CN"
 SEC_PROJECT_NAME = "GlobalMarketIntelligence"
-
-[[kv_namespaces]]
-binding = "MARKET_CACHE"
-id = "your_kv_namespace_id"
-
-[[kv_namespaces]]
-binding = "NEWS_CACHE"
-id = "your_news_kv_namespace_id"
-
-[[d1_databases]]
-binding = "DB"
-database_name = "global_market_intelligence"
-database_id = "your_d1_database_id"
-
-[[r2_buckets]]
-binding = "REPORT_BUCKET"
-bucket_name = "market-reports"
-
-[[queues.producers]]
-binding = "AI_ANALYSIS_QUEUE"
-queue = "ai-analysis-queue"
-
-[[queues.consumers]]
-queue = "ai-analysis-queue"
-
-[triggers]
-crons = [
-  "*/1 * * * *",
-  "*/5 * * * *",
-  "0 22 * * 1-5"
-]

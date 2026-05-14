@@ -56,7 +56,9 @@ The dashboard displays source, update time, realtime/delayed flags, cache/stale 
 
 ## Cloudflare Runtime
 
-`wrangler.toml` binds:
+The default `wrangler.toml` is intentionally minimal so the first deploy can run without pre-created KV, D1, R2, or Queue resources. When KV bindings are absent, the app falls back to in-memory cache.
+
+After creating Cloudflare resources, add these bindings back:
 - `MARKET_CACHE` for quote, macro, rate-limit, and stale cache entries
 - `NEWS_CACHE` for news metadata and SEC filing cache
 - `DB` for future D1 ingestion
