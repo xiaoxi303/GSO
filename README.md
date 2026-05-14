@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Global Market Intelligence
 
-## Getting Started
+Cloudflare-first market dashboard using free or low-cost data sources. API keys stay on the server; the browser only calls local `/api/*` routes.
 
-First, run the development server:
+## Local Development
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Free Source Priority
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Market data:
+- Finnhub: `FINNHUB_API_KEY`
+- Twelve Data Basic: `TWELVE_DATA_API_KEY`
+- Alpha Vantage: `ALPHA_VANTAGE_API_KEY`
+- Financial Modeling Prep: `FMP_API_KEY`
 
-## Learn More
+News metadata:
+- NewsAPI: `NEWS_API_KEY`
+- Finnhub News: `FINNHUB_API_KEY`
+- GDELT: no key
+- RSS feeds: no key
 
-To learn more about Next.js, take a look at the following resources:
+Macro / crypto / filings:
+- FRED: `FRED_API_KEY`
+- EIA: `EIA_API_KEY`
+- CoinGecko Demo: `COINGECKO_API_KEY` optional for simple price calls
+- SEC EDGAR: no key, but `SEC_CONTACT_EMAIL` is required for the User-Agent
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+China data:
+- AKShare requires a Python sidecar or scheduled D1/KV sync because Cloudflare Workers cannot run Python.
+- Tushare Pro uses `TUSHARE_TOKEN`; availability depends on token permissions and points.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Cloudflare Secrets
 
-## Deploy on Vercel
+Store keys with Wrangler secrets:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npx wrangler secret put FINNHUB_API_KEY
+npx wrangler secret put TWELVE_DATA_API_KEY
+npx wrangler secret put ALPHA_VANTAGE_API_KEY
+npx wrangler secret put FMP_API_KEY
+npx wrangler secret put NEWS_API_KEY
+npx wrangler secret put FRED_API_KEY
+npx wrangler secret put EIA_API_KEY
+npx wrangler secret put COINGECKO_API_KEY
+npx wrangler secret put TUSHARE_TOKEN
+npx wrangler secret put SEC_CONTACT_EMAIL
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The dashboard displays source, update time, realtime/delayed flags, cache/stale state, API key missing, and API limit reached statuses. Delayed free data is never labeled as realtime.
+
+## Cloudflare Runtime
+
+`wrangler.toml` binds:
+- `MARKET_CACHE` for quote, macro, rate-limit, and stale cache entries
+- `NEWS_CACHE` for news metadata and SEC filing cache
+- `DB` for future D1 ingestion
+
+Run Cloudflare preview:
+
+```bash
+npm run preview
+```
