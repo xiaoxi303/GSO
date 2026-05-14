@@ -1,4 +1,4 @@
-name = "global-market-intelligence"
+name = "gg"
 main = ".open-next/worker.js"
 compatibility_date = "2026-05-14"
 compatibility_flags = ["nodejs_compat"]
